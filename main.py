@@ -21,7 +21,7 @@ app = FastAPI()
 # CORS pour React (ajoute l'URL de ton frontend Vercel)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ton-frontend.vercel.app"],  # remplace par ton URL Vercel
+    allow_origins=["mental-chatbot-frontend-seven.vercel.app"],  # remplace par ton URL Vercel
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
