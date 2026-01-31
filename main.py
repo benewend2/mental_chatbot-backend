@@ -4,12 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 from google.genai import Client
+import uvicorn
 
 # Charger les variables d'environnement
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
-
 if not api_key:
     raise ValueError("❌ GEMINI_API_KEY non trouvée. Vérifie ton fichier .env")
 
@@ -18,10 +18,10 @@ client = Client(api_key=api_key)
 
 app = FastAPI()
 
-# CORS pour React
+# CORS pour React (ajoute l'URL de ton frontend Vercel)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["https://ton-frontend.vercel.app"],  # remplace par ton URL Vercel
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,7 +48,6 @@ async def chat(request: ChatRequest):
 Utilisateur :
 {request.message}
 """
-
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt
@@ -58,3 +57,9 @@ Utilisateur :
 
     except Exception as e:
         return {"error": str(e)}
+
+
+# Lancer le serveur avec Render
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
